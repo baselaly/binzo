@@ -9,18 +9,18 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('./views/Home.vue')
+      component: () => import('./views/Main.vue'),
+      children: [
+        {
+          path: '',
+          redirect: { name: 'home' },
+        },
+        {
+          path: '/home',
+          name: 'home',
+          component: () => import('./views/Home.vue')
+        },
+      ]
     },
-    {
-      path: '/contact',
-      name: 'contact',
-      component: () => import('./views/Contact.vue')
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('./views/About.vue')
-    }
   ]
 })
