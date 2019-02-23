@@ -1,16 +1,19 @@
 <template>
   <div>
     <v-navigation-drawer clipped fixed v-model="drawer" app>
-      <v-flex xs12 text-xs-center py-3>
-        <v-avatar size="80" class="nav-profile-img">
-          <img src="https://cdn.vuetifyjs.com/images/cards/halcyon.png" alt="avatar">
-        </v-avatar>
+      <v-flex class="nav-user-info">
+        <v-flex xs12 text-xs-center py-3>
+          <v-avatar size="80" class="nav-profile-img">
+            <img src="https://cdn.vuetifyjs.com/images/cards/halcyon.png" alt="avatar">
+          </v-avatar>
+        </v-flex>
+        <v-flex display-1 text-truncate py-1 text-xs-center>Basel</v-flex>
+        <v-flex subheading text-truncate py-3 text-xs-center>
+          <v-flex py-2>Following 1,045</v-flex>
+          <v-flex py-2>Followers 2,451</v-flex>
+        </v-flex>
       </v-flex>
-      <v-flex subheading text-truncate py-3 text-xs-center>
-        <v-flex py-2>Following 1,045</v-flex>
-        <v-flex py-2>Followers 2,451</v-flex>
-      </v-flex>
-      <v-list class="py-3" dense>
+      <v-list class="pb-3 pt-0" dense>
         <router-link to="/home" class="nav-text-link py-2 d-block">
           <v-list-tile>
             <v-list-tile-action>
@@ -64,7 +67,10 @@ export default {
   color: white;
   text-decoration: none;
 }
-.nav-profile-img{
+.nav-profile-img {
   box-shadow: 0px 1px 2px 2px #0000005e;
+}
+.nav-user-info{
+  background-color:#212121;
 }
 </style>
