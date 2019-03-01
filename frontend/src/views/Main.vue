@@ -5,7 +5,7 @@
       <v-container fluid fill-height>
         <v-layout justify-center align-center>
           <v-flex>
-            <router-view />
+            <router-view/>
           </v-flex>
         </v-layout>
       </v-container>

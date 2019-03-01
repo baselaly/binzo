@@ -44,7 +44,9 @@
     <v-toolbar app fixed clipped-left>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title>
-        <img height="50px" width="100px" src="@/assets/logo.png">
+        <div class="display-1">
+          <span class="display-2 px-2 py-1 B-logo">B</span>INZO
+        </div>
       </v-toolbar-title>
     </v-toolbar>
   </div>
@@ -70,7 +72,11 @@ export default {
 .nav-profile-img {
   box-shadow: 0px 1px 2px 2px #0000005e;
 }
-.nav-user-info{
-  background-color:#212121;
+.nav-user-info {
+  background-color: #212121;
+}
+.B-logo {
+  background-color: #ffa726;
+  border-radius: 10px;
 }
 </style>
