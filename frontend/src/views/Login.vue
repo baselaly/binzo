@@ -30,6 +30,9 @@
                 :rules="passwordRules"
                 label="Password"
                 v-model="password"
+                :append-icon="show_password ? 'visibility_off' : 'visibility'"
+                :type="show_password ? 'text' : 'password'"
+                @click:append="show_password = !show_password"
               ></v-text-field>
               <v-btn color="orange lighten-1" @click="login">Login</v-btn>
               <v-flex d-inline-block ml-2 class="subheading">Dont have an account?
@@ -48,9 +51,6 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import axios from "axios";
-
 export default {
   name: "login",
   data() {
@@ -60,26 +60,47 @@ export default {
       snackbar_color: "",
       login_form: true,
       email: "",
-      emailRules: [
-        v => !!v || "Email is required",
-        v => (v && v.length <= 254) || "Email must be less than 255 characters"
-      ],
+      emailRules: [v => !!v || "Email is required"],
       password: "",
-      passwordRules: [
-        v => !!v || "Password is required",
-        v =>
-          (v && v.length <= 100) || "Password must be less than 100 characters"
-      ]
+      passwordRules: [v => !!v || "Password is required"],
+      show_password: false,
+      csrf_token: ""
     };
   },
-  created() {},
+  created() {
+    this.getCsrfToken();
+  },
   methods: {
     login() {
       if (!this.$refs.login_form.validate()) {
         this.showSnackbar("please enter your email and password", "red");
         return;
       }
-      console.log("logged in");
+      var user = new FormData();
+      user.append("email", this.email);
+      user.append("password", this.password);
+      user.append("csrf_token", this.csrf_token);
+
+      this.$http
+        .post("http://localhost/binzo/backend/apis/user/login.php", user)
+        .then(response => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      console.log(this.email, this.password);
+    },
+    getCsrfToken() {
+      this.$http
+        .get("http://localhost/binzo/backend/apis/user/getCsrfToken.php")
+        .then(response => {
+          this.csrf_token = response.data.csrf_token;
+          console.log(response);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
     showSnackbar(message, color) {
       this.snackbar = true;

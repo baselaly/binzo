@@ -1,6 +1,6 @@
 <?php
 header('content-type:application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:8080');
 
 require_once '../../model/User.php';
 

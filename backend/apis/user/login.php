@@ -1,6 +1,8 @@
 <?php
 header('content-type:application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: http://localhost:8080');
+header("Content-type: application/javascript");
+header('Access-Control-Allow-Credentials:true');
 
 require_once '../../config/Csrf_protection.php';
 require_once '../../model/User.php';
@@ -11,6 +13,9 @@ if ($method !== 'POST') {
     echo json_encode(['code' => 400, 'message' => 'invalid request method']);
     exit;
 }
+
+echo json_encode(['session' => $_COOKIE]);
+exit;
 
 try {
     CSRF::check_csrf_token();
