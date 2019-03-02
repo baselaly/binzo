@@ -73,9 +73,6 @@ export default {
         this.showSnackbar("please enter your email and password", "red");
         return;
       }
-      var user = new FormData();
-      user.append("email", this.email);
-      user.append("password", this.password);
 
       var user = {
         email: this.email,
