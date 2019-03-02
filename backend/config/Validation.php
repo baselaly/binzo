@@ -2,6 +2,7 @@
 
 class Validator
 {
+
     public function sanitize_input($input, $type)
     {
         switch ($type) {
@@ -24,11 +25,11 @@ class Validator
         return $input;
     }
 
-    public function checkRequired($required)
+    public function checkRequired($data, $required)
     {
         $errors = [];
         foreach ($required as $field) {
-            if (empty($_POST[$field])) {
+            if (empty($data[$field])) {
                 $errors[] = $field . ' field is required';
             }
         }

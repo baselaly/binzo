@@ -2,8 +2,8 @@
 
 header('content-type:application/json');
 header('Access-Control-Allow-Origin: http://localhost:8080');
+header('Access-Control-Allow-Headers: content-type');
 
-require_once '../../config/Csrf_protection.php';
 require_once '../../model/User.php';
 require_once '../../model/Post.php';
 require_once '../../config/Validation.php';
@@ -14,18 +14,13 @@ if ($method !== 'POST') {
     exit;
 }
 
-$_POST = json_decode(file_get_contents('php://input'));
-
-try {
-    CSRF::check_csrf_token();
-} catch (Exception $e) {
-    echo json_encode(['code' => 419, 'message' => $e->getMessage()]);
-    exit;
+if (empty($_POST)) {
+    $_POST = json_decode(file_get_contents('php://input'), true);
 }
 
 $validator = new Validator;
 
-$required_errors = $validator->checkRequired(['body']);
+$required_errors = $validator->checkRequired($_POST, ['body']);
 
 if (count($required_errors) > 0) {
     echo json_encode(['code' => 422, 'message' => $required_errors[0]]);

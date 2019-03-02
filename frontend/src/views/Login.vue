@@ -63,13 +63,10 @@ export default {
       emailRules: [v => !!v || "Email is required"],
       password: "",
       passwordRules: [v => !!v || "Password is required"],
-      show_password: false,
-      csrf_token: ""
+      show_password: false
     };
   },
-  created() {
-    this.getCsrfToken();
-  },
+  created() {},
   methods: {
     login() {
       if (!this.$refs.login_form.validate()) {
@@ -79,13 +76,11 @@ export default {
       var user = new FormData();
       user.append("email", this.email);
       user.append("password", this.password);
-      user.append("csrf_token", this.csrf_token);
 
-      // var user = {
-      //   email: this.email,
-      //   password: this.password,
-      //   csrf_token: this.csrf_token
-      // };
+      var user = {
+        email: this.email,
+        password: this.password
+      };
 
       this.$http
         .post("http://localhost/binzo/backend/apis/user/login.php", user)
@@ -96,17 +91,6 @@ export default {
           console.log(error);
         });
       console.log(this.email, this.password);
-    },
-    getCsrfToken() {
-      this.$http
-        .get("http://localhost/binzo/backend/apis/user/getCsrfToken.php")
-        .then(response => {
-          this.csrf_token = response.data.csrf_token;
-          console.log(response);
-        })
-        .catch(error => {
-          console.log(error);
-        });
     },
     showSnackbar(message, color) {
       this.snackbar = true;
