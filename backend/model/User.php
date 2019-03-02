@@ -179,8 +179,8 @@ class User
         try {
             isset($_GET['page']) && filter_var($_GET['page'], FILTER_VALIDATE_INT) ? $page = $_GET['page'] : $page = 1;
             $page = (int) $page;
-            $limit = 20; //per page
-            $offset = 20 * ($page - 1);
+            $limit = 10; //per page
+            $offset = 10 * ($page - 1);
             $db = $this->db->openConnection();
             $sql = 'SELECT posts.created_at,posts.id,posts.body,posts.user_id,
             CONCAT(users.first_name," ",users.last_name) AS fullname, users.image FROM `users`

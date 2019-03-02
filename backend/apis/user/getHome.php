@@ -6,6 +6,8 @@ header('Access-Control-Allow-Headers: Authorization');
 require_once '../../model/User.php';
 require_once '../../model/Post.php';
 require_once '../../model/PostImage.php';
+require_once '../../model/Like.php';
+require_once '../../model/Comment.php';
 // Prepend a base path if Predis is not available in your "include_path".
 // require '../../predis/src/Autoloader.php';
 
@@ -40,6 +42,18 @@ try {
         } else {
             $post->image = null;
         }
+        $like = new Like;
+        $post->likes_count = $like->getLikesCount($post->id);
+        $like->post_id = $post->id;
+        $like->user_id = $logged_user->id;
+        $liked = $like->checkLike();
+        if (!$liked) {
+            $post->liked = false;
+        } else {
+            $post->liked = true;
+        }
+        $comment = new Comment;
+        $post->comments_count = $comment->getCommentsCount($post->id);
     }
     echo json_encode(['code' => 200, 'posts' => $posts]);
 } catch (Exception $e) {

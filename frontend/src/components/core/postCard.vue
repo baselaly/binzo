@@ -14,7 +14,7 @@
       </v-list-tile>
     </v-card-title>
     <router-link to="/login" class="white--text post-link">
-      <v-card-text class="title font-weight-light">
+      <v-card-text class="subheading font-weight-light">
         {{body}}
         <v-img v-if="post_image!=null" class="my-4" :src="post_image"></v-img>
       </v-card-text>
@@ -74,14 +74,6 @@ export default {
     likes_count: {
       required: true,
       type: Number
-    },
-    comments_count: {
-      required: true,
-      type: Number
-    },
-    created_at: {
-      required: true,
-      type: String
     },
     comments_count: {
       required: true,
