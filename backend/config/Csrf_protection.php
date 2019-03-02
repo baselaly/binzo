@@ -14,14 +14,14 @@ class CSRF
         return empty($_SESSION['key']) ? false : true;
     }
 
-    public static function check_csrf_token($csrf_token)
+    public static function check_csrf_token()
     {
         if (!self::exists()) {
             self::generate_token();
         }
         $csrf = hash_hmac('sha256', 'this is some random text.', $_SESSION['key']);
 
-        if (!hash_equals($csrf, $csrf_token)) {
+        if (!hash_equals($csrf, $_POST['csrf_token'])) {
             throw new \Exception('invalid csrf_token');
         }
     }

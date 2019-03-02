@@ -2,7 +2,6 @@
 
 header('content-type:application/json');
 header('Access-Control-Allow-Origin: http://localhost:8080');
-header('Access-Control-Allow-Headers: content-type');
 
 require_once '../../config/Csrf_protection.php';
 require_once '../../model/User.php';
@@ -15,10 +14,10 @@ if ($method !== 'POST') {
     exit;
 }
 
-$post = json_decode(file_get_contents('php://input'));
+$_POST = json_decode(file_get_contents('php://input'));
 
 try {
-    CSRF::check_csrf_token($post['csrf_token']);
+    CSRF::check_csrf_token();
 } catch (Exception $e) {
     echo json_encode(['code' => 419, 'message' => $e->getMessage()]);
     exit;
@@ -43,7 +42,7 @@ if (isset($_FILES['image'])) {
     }
 }
 
-$body = $validator->sanitize_input($post['body'], 'string');
+$body = $validator->sanitize_input($_POST['body'], 'string');
 
 try {
     $user = new User;

@@ -2,7 +2,6 @@
 
 header('content-type:application/json');
 header('Access-Control-Allow-Origin: http://localhost:8080');
-header('Access-Control-Allow-Headers: content-type');
 
 require_once '../../config/Csrf_protection.php';
 require_once '../../model/User.php';
@@ -14,10 +13,8 @@ if ($method !== 'POST') {
     exit;
 }
 
-$post = json_decode(file_get_contents('php://input'));
-
 try {
-    CSRF::check_csrf_token($post['csrf_token']);
+    CSRF::check_csrf_token();
 } catch (Exception $e) {
     echo json_encode(['code' => 419, 'message' => $e->getMessage()]);
     exit;
@@ -33,9 +30,9 @@ if (count($required_errors) > 0) {
     exit;
 }
 
-$old_password = $post['old_password'];
-$new_password = $validator->sanitize_input($post['new_password'], 'string');
-$password_confirmation = $validator->sanitize_input($post['password_confirmation'], 'string');
+$old_password = $_POST['old_password'];
+$new_password = $validator->sanitize_input($_POST['new_password'], 'string');
+$password_confirmation = $validator->sanitize_input($_POST['password_confirmation'], 'string');
 
 if ($new_password !== $password_confirmation) {
     echo json_encode(['code' => 422, 'message' => 'your password confirmations doesnt match.']);

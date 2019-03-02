@@ -2,7 +2,6 @@
 
 header('content-type:application/json');
 header('Access-Control-Allow-Origin: http://localhost:8080');
-header('Access-Control-Allow-Headers: content-type');
 
 require_once '../../config/Csrf_protection.php';
 require_once '../../model/User.php';
@@ -14,10 +13,8 @@ if ($method !== 'POST') {
     exit;
 }
 
-$post = json_decode(file_get_contents('php://input'));
-
 try {
-    CSRF::check_csrf_token($post['csrf_token']);
+    CSRF::check_csrf_token();
 } catch (Exception $e) {
     echo json_encode(['code' => 419, 'message' => $e->getMessage()]);
     exit;
@@ -33,12 +30,12 @@ if (count($required_errors) > 0) {
     exit;
 }
 
-$email = $validator->sanitize_input($post['email'], 'email');
-$first_name = $validator->sanitize_input($post['first_name'], 'string');
-$last_name = $validator->sanitize_input($post['last_name'], 'string');
-$country = $validator->sanitize_input($post['country'], 'string');
-$city = $validator->sanitize_input($post['city'], 'string');
-$password = $validator->sanitize_input($post['password'], 'string');
+$email = $validator->sanitize_input($_POST['email'], 'email');
+$first_name = $validator->sanitize_input($_POST['first_name'], 'string');
+$last_name = $validator->sanitize_input($_POST['last_name'], 'string');
+$country = $validator->sanitize_input($_POST['country'], 'string');
+$city = $validator->sanitize_input($_POST['city'], 'string');
+$password = $validator->sanitize_input($_POST['password'], 'string');
 
 if (!$validator->email_validate($email)) {
     echo json_encode(['code' => 422, 'message' => 'invalid email format']);

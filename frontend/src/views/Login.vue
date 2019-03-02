@@ -81,11 +81,11 @@ export default {
       user.append("password", this.password);
       user.append("csrf_token", this.csrf_token);
 
-      var user = {
-        email: this.email,
-        password: this.password,
-        csrf_token: this.csrf_token
-      };
+      // var user = {
+      //   email: this.email,
+      //   password: this.password,
+      //   csrf_token: this.csrf_token
+      // };
 
       this.$http
         .post("http://localhost/binzo/backend/apis/user/login.php", user)
