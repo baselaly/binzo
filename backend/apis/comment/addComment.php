@@ -1,6 +1,7 @@
 <?php
 header('content-type:application/json');
 header('Access-Control-Allow-Origin: http://localhost:8080');
+header('Access-Control-Allow-Headers: content-type');
 
 require_once '../../model/User.php';
 require_once '../../model/Comment.php';
@@ -14,8 +15,13 @@ if ($method !== 'POST') {
     exit;
 }
 
+$post = json_decode(file_get_contents('php://input'));
+
+echo json_encode($post);
+exit;
+
 try {
-    CSRF::check_csrf_token();
+    CSRF::check_csrf_token($post['csrf_token']);
 } catch (Exception $e) {
     echo json_encode(['code' => 419, 'message' => $e->getMessage()]);
     exit;
@@ -28,8 +34,8 @@ try {
         echo json_encode(['code' => 422, 'message' => $required_errors[0]]);
         exit;
     }
-    $user_comment = $validator->sanitize_input($_POST['comment'], 'string');
-    $post_id = $validator->sanitize_input($_POST['post_id'], 'integer');
+    $user_comment = $validator->sanitize_input($post['comment'], 'string');
+    $post_id = $validator->sanitize_input($post['post_id'], 'integer');
     if (!$validator->max_lenght($user_comment, 500)) {
         echo json_encode(['code' => 422, 'message' => 'your comment must not exceed 500 characters']);
         exit;

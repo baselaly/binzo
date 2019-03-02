@@ -1,8 +1,7 @@
 <?php
 header('content-type:application/json');
 header('Access-Control-Allow-Origin: http://localhost:8080');
-header("Content-type: application/javascript");
-header('Access-Control-Allow-Credentials:true');
+header('Access-Control-Allow-Headers: content-type');
 
 require_once '../../config/Csrf_protection.php';
 require_once '../../model/User.php';
@@ -13,8 +12,9 @@ if ($method !== 'POST') {
     echo json_encode(['code' => 400, 'message' => 'invalid request method']);
     exit;
 }
+$entityBody = json_decode(file_get_contents('php://input'));
 
-echo json_encode(['session' => $_COOKIE]);
+echo json_encode(['session' => $entityBody]);
 exit;
 
 try {
