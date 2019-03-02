@@ -20,6 +20,12 @@ if (!filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
 }
 
 try {
+    $user = new User;
+    $logged_user = $user->getLoggedUser();
+    if (!$logged_user) {
+        echo json_encode(['code' => 403, 'message' => 'unauthorized user.']);
+        exit;
+    }
     $post = new Post;
     $post = $post->selectById($_GET['id']);
     if (!$post) {
@@ -34,6 +40,7 @@ try {
         exit;
     }
     $post->owner_image = 'http://localhost/binzo/backend/uploads/users/' . $post_owner->image;
+    $post->owner_name = $post_owner->first_name . ' ' . $post_owner->last_name;
 
     $post_image = new PostImage;
     $post_image = $post_image->getPostImage($post->id);
@@ -44,6 +51,14 @@ try {
     }
     $like = new Like;
     $post->likes_count = $like->getLikesCount($post->id);
+    $like->post_id = $post->id;
+    $like->user_id = $logged_user->id;
+    $liked = $like->checkLike();
+    if (!$liked) {
+        $post->liked = false;
+    } else {
+        $post->liked = true;
+    }
     $comment = new Comment;
     $post->comments_count = $comment->getCommentsCount($post->id);
     $date = date_create($post->created_at);

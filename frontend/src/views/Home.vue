@@ -1,30 +1,22 @@
 <template>
   <v-flex xs12>
-    <v-card>
-      <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" height="200px"></v-img>
-
-      <v-card-title primary-title>
-        <div>
-          <div class="headline">Top western road trips</div>
-          <span class="grey--text">1,000 miles of wonder</span>
-        </div>
-      </v-card-title>
-
-      <v-card-actions>
-        <v-btn flat>Share</v-btn>
-        <v-btn flat color="purple">Explore</v-btn>
-        <v-spacer></v-spacer>
-        <v-btn icon @click="show = !show">
-          <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
-        </v-btn>
-      </v-card-actions>
-
-      <v-slide-y-transition>
-        <v-card-text
-          v-show="show"
-        >I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.</v-card-text>
-      </v-slide-y-transition>
-    </v-card>
+    <v-flex v-for="(post, i) in posts" :key="i" ma-2>
+      <postCard
+        :id="post.id"
+        :body="post.body"
+        :user_id="post.user_id"
+        :created_at="post.created_at"
+        :owner_image="post.owner_image"
+        :owner_name="post.owner_name"
+        :post_image="post.image"
+        :liked="post.liked"
+        :likes_count="post.likes_count"
+        :comments_count="post.comments_count"
+      ></postCard>
+    </v-flex>
+    <v-btn color="#ffa726" fab fixed top right>
+      <v-icon>add</v-icon>
+    </v-btn>
   </v-flex>
 </template>
 
@@ -33,6 +25,79 @@
 
 export default {
   name: "home",
-  components: {}
+  components: {
+    postCard: () => import("@/components/core/postCard")
+  },
+  data() {
+    return {
+      posts: [
+        {
+          id: 27,
+          body: "my second post",
+          user_id: 26,
+          no_of_views: 0,
+          created_at: "2019-01-26 7:44PM",
+          owner_image: "http://localhost/binzo/backend/uploads/users/user.png",
+          owner_name: "basel aly",
+          image: null,
+          likes_count: 1,
+          liked: true,
+          comments_count: 0
+        },
+        {
+          id: 28,
+          body: "my second post",
+          user_id: 26,
+          no_of_views: 0,
+          created_at: "2019-01-26 7:44PM",
+          owner_image: "http://localhost/binzo/backend/uploads/users/user.png",
+          owner_name: "basel aly",
+          image: null,
+          likes_count: 1,
+          liked: true,
+          comments_count: 0
+        },
+        {
+          id: 30,
+          body: "my second post",
+          user_id: 26,
+          no_of_views: 0,
+          created_at: "2019-01-26 7:44PM",
+          owner_image: "http://localhost/binzo/backend/uploads/users/user.png",
+          owner_name: "basel aly",
+          image: null,
+          likes_count: 1,
+          liked: true,
+          comments_count: 0
+        },
+        {
+          id: 29,
+          body: "my second post",
+          user_id: 26,
+          no_of_views: 0,
+          created_at: "2019-01-26 7:44PM",
+          owner_image: "http://localhost/binzo/backend/uploads/users/user.png",
+          owner_name: "basel aly",
+          image: null,
+          likes_count: 1,
+          liked: true,
+          comments_count: 0
+        },
+        {
+          id: 31,
+          body: "my second post",
+          user_id: 26,
+          no_of_views: 0,
+          created_at: "2019-01-26 7:44PM",
+          owner_image: "http://localhost/binzo/backend/uploads/users/user.png",
+          owner_name: "basel aly",
+          image: null,
+          likes_count: 1,
+          liked: true,
+          comments_count: 0
+        }
+      ]
+    };
+  }
 };
 </script>
