@@ -76,7 +76,7 @@ export default {
 
       var user = {
         email: this.email,
-        password: this.password
+        password: null
       };
 
       this.$http

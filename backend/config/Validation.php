@@ -29,7 +29,7 @@ class Validator
     {
         $errors = [];
         foreach ($required as $field) {
-            if (empty($data[$field])) {
+            if (empty($data[$field]) || !isset($data[$field])) {
                 $errors[] = $field . ' field is required';
             }
         }
