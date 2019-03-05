@@ -1,0 +1,7 @@
+{
+    "name": "binzo/backend",
+    "description": "Social Site App",
+    "type": "project",
+    "require": {},
+    "require-dev": {}
+}
