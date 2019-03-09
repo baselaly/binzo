@@ -72,24 +72,24 @@ class User
     {
         try {
             $db = $this->db->openConnection();
-            $sql = 'SELECT `id`,`status`,`password` FROM `users` WHERE `email`=:email LIMIT 1';
+            $sql = 'SELECT * FROM `users` WHERE `email`=:email LIMIT 1';
             $stmt = $db->prepare($sql);
             $stmt->execute([
                 'email' => $credentials['email'],
             ]);
             $this->db->closeConnection();
-            $result = $stmt->fetchObject('User');
-            if ($result && password_verify($credentials['password'], $result->password)) {
+            $user = $stmt->fetchObject('User');
+            if ($user && password_verify($credentials['password'], $user->password)) {
                 $paylod = [
                     'iat' => time(),
                     'iss' => 'localhost',
-                    // 'exp' => time() + (60 * 60 * 60 * 60),
-                    'userId' => $this->id,
+                    'exp' => time() + 86400,
+                    'userId' => $user->id,
                 ];
 
                 $jwt_token = JWT::encode($paylod);
-                $result->jwt_token = $jwt_token;
-                return $result;
+                $user->jwt_token = $jwt_token;
+                return $user;
             }
             return false;
         } catch (PDOException $e) {
@@ -104,9 +104,6 @@ class User
             $payload = JWT::decode($token);
             $id = $payload->userId;
             $user = $this->selectById($id);
-            if (!$user) {
-                return false;
-            }
             return $user;
         } catch (Exception $e) {
             throw new \Exception($e->getMessage());

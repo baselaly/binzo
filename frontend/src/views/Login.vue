@@ -76,18 +76,24 @@ export default {
 
       var user = {
         email: this.email,
-        password: null
+        password: this.password
       };
 
       this.$http
         .post("http://localhost/binzo/backend/apis/user/login.php", user)
         .then(response => {
-          console.log(response);
+          let code = response.data.code;
+          if (code !== 200) {
+            this.showSnackbar(response.data.message, "red");
+            return;
+          }
+          let token = response.data.token;
+          this.$cookies.set("Utoken", token, "1d");
+          this.$router.push({ name: "home" });
         })
         .catch(error => {
-          console.log(error);
+          this.showSnackbar("something went wrong!", "red");
         });
-      console.log(this.email, this.password);
     },
     showSnackbar(message, color) {
       this.snackbar = true;

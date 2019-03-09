@@ -33,7 +33,6 @@ $password = $validator->sanitize_input($_POST['password'], 'string');
 try {
     $user = new User;
     $logged_user = $user->login(['email' => $email, 'password' => $password]);
-
     if (!$logged_user) {
         echo json_encode(['code' => 401, 'message' => 'wrong email or password']);
         exit;
