@@ -36,7 +36,7 @@
         </router-link>
       </v-list>
       <v-flex text-xs-center>
-        <v-btn round color="red darken-1" class="white--text">Logout
+        <v-btn round color="red darken-1" class="white--text" @click="logout">Logout
           <v-icon right dark>lock</v-icon>
         </v-btn>
       </v-flex>
@@ -58,6 +58,12 @@ export default {
     return {
       drawer: true
     };
+  },
+  methods: {
+    logout() {
+      this.$cookies.remove("Utoken");
+      this.$router.push("/login");
+    }
   }
 };
 </script>

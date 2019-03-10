@@ -2,7 +2,6 @@ import axios from 'axios';
 
 function checkUser() {
     let token = window.$cookies.get('Utoken');
-    console.log(token);
     return new Promise(resolve => {
         if (!token) {
             resolve(false);
