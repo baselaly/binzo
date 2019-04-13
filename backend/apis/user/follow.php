@@ -31,7 +31,7 @@ try {
         exit;
     }
 
-    if ($user->id === $logged_user->id) {
+    if ($user->id == $logged_user->id) {
         echo json_encode(['code' => 500, 'message' => 'something went wrong!']);
         exit;
     }

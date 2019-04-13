@@ -25,6 +25,13 @@ export default new Router({
           beforeEnter: UserGuard,
           meta: { Auth: true },
         },
+        {
+          path: '/post/:id',
+          name: 'post',
+          component: () => import('./views/SinglePost.vue'),
+          beforeEnter: UserGuard,
+          meta: { Auth: true },
+        },
       ],
     },
     {

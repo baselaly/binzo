@@ -13,7 +13,7 @@
         </v-list-tile-content>
       </v-list-tile>
     </v-card-title>
-    <router-link to="/login" class="white--text post-link">
+    <router-link :to="{ name: 'post', params: {id: id } }" class="white--text post-link">
       <v-card-text class="subheading font-weight-light">
         {{body}}
         <v-img v-if="post_image!=null" class="my-4" :src="post_image"></v-img>
@@ -23,13 +23,17 @@
     <v-card-actions>
       <v-list-tile class="grow">
         <v-layout align-center>
-          <v-icon @click="like(id)" class="mr-1">{{liked ? 'favorite' : 'favorite_border'}}</v-icon>
-          <span class="subheading mr-2">{{likes_count}}</span>
-          <v-icon class="mr-1">mode_comment</v-icon>
+          <v-icon
+            @click="like(id)"
+            class="mr-1 like-icon"
+          >{{liked ? 'favorite' : 'favorite_border'}}</v-icon>
+          <span class="subheading mr-2 like-span">{{likes_count}}</span>
+          <v-icon @click="showCommentDialog" class="mr-1">mode_comment</v-icon>
           <span class="subheading">{{comments_count}}</span>
         </v-layout>
       </v-list-tile>
     </v-card-actions>
+    <commentDialog :dialog="commentDialog" :post_id="id" @close-comment-dialog="closeCommentDialog"></commentDialog>
   </v-card>
 </template>
 
@@ -38,7 +42,14 @@
 
 export default {
   name: "postCard",
-  components: {},
+  components: {
+    commentDialog: () => import("@/components/dialogs/CommentDialog")
+  },
+  data() {
+    return {
+      commentDialog: false
+    };
+  },
   props: {
     id: {
       required: true,
@@ -63,10 +74,6 @@ export default {
       required: true,
       type: String
     },
-    body: {
-      required: true,
-      type: String
-    },
     liked: {
       required: true,
       type: Boolean
@@ -82,7 +89,31 @@ export default {
   },
   methods: {
     like(post_id) {
-      this.liked = !this.liked;
+      let token = this.$cookies.get("Utoken");
+      this.$http
+        .get(
+          `http://localhost/binzo/backend/apis/like/like.php?id=${post_id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + token
+            }
+          }
+        )
+        .then(response => {
+          this.$emit("like-trigger", post_id);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    showCommentDialog() {
+      this.commentDialog = true;
+    },
+    closeCommentDialog(value) {
+      if (value.state == true) {
+        this.$emit("comment-added", value.post_id);
+      }
+      this.commentDialog = false;
     }
   }
 };
@@ -90,5 +121,11 @@ export default {
 <style>
 .post-link {
   text-decoration: none;
+}
+.like-icon {
+  color: #f34747 !important;
+}
+.like-span {
+  color: #f34747 !important;
 }
 </style>

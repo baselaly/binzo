@@ -183,20 +183,18 @@ class User
             CONCAT(users.first_name," ",users.last_name) AS fullname, users.image FROM `users`
             INNER JOIN `followers` ON users.id=followers.user_id
             INNER JOIN `posts` ON users.id=posts.user_id
-            WHERE followers.follower_id=:user_id
-            OR posts.user_id=followers.follower_id
+            WHERE posts.user_id=:user_id
+            OR posts.user_id=(SELECT `user_id` FROM `followers` WHERE `follower_id`=:userID)
             ORDER BY posts.created_at DESC LIMIT :offset,:limit';
             $stmt = $db->prepare($sql);
             $stmt->execute([
                 'user_id' => $user_id,
+                'userID' => $user_id,
                 'limit' => $limit,
                 'offset' => $offset,
             ]);
             $this->db->closeConnection();
             $result = $stmt->fetchAll(PDO::FETCH_OBJ);
-            if (!$result) {
-                return false;
-            }
             return $result;
         } catch (PDOException $e) {
             throw new \Exception($e->getMessage());

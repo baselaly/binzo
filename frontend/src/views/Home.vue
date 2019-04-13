@@ -11,11 +11,17 @@
         :liked="post.liked"
         :likes_count="post.likes_count"
         :comments_count="post.comments_count"
+        @like-trigger="likeTrigger"
+        @comment-added="commentAdded"
       ></postCard>
     </v-flex>
     <v-btn color="#ffa726" fab fixed top right>
       <v-icon>add</v-icon>
     </v-btn>
+    <v-snackbar v-model="snackbar" :color="snackbar_color" bottom left>
+      {{snackbar_message}}
+      <v-btn color="white" flat @click="snackbar = false">Close</v-btn>
+    </v-snackbar>
   </v-flex>
 </template>
 
@@ -29,271 +35,87 @@ export default {
   },
   data() {
     return {
-      posts: [
-        {
-          created_at: "2019-01-26 19:44:55",
-          id: 27,
-          body: "my second post",
-          user_id: 26,
-          fullname: "basel aly",
-          image: null,
-          user_image: "http://localhost/binzo/backend/uploads/users/user.png",
-          likes_count: 1,
-          liked: true,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-26 19:44:34",
-          id: 26,
-          body: "my second post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 17:19:44",
-          id: 25,
-          body: "my second post",
-          user_id: 33,
-          fullname: "basel aly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c45cdae345ba.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 17:19:18",
-          id: 24,
-          body: "my second post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 15:46:37",
-          id: 22,
-          body: "my second post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image:
-            "http://localhost/binzo/backend/uploads/posts/5c487e4d2c251.jpg",
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 15:16:47",
-          id: 21,
-          body: "my second post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image:
-            "http://localhost/binzo/backend/uploads/posts/5c48774f37485.jpg",
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 15:10:58",
-          id: 20,
-          body: "my second post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image:
-            "http://localhost/binzo/backend/uploads/posts/5c4875f2d8ec2.jpg",
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 15:09:44",
-          id: 19,
-          body: "my second post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 14:23:19",
-          id: 16,
-          body: "my second post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 14:14:33",
-          id: 15,
-          body: "my second post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 14:10:00",
-          id: 14,
-          body: "my second post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 13:42:01",
-          id: 13,
-          body: "my second post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 13:18:07",
-          id: 12,
-          body: "my first post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 13:07:41",
-          id: 8,
-          body: "my first post",
-          user_id: 37,
-          fullname: "basel aly",
-          image: null,
-          user_image: "http://localhost/binzo/backend/uploads/users/user.png",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 13:00:06",
-          id: 7,
-          body: "my first post",
-          user_id: 28,
-          fullname: "basel aly",
-          image: null,
-          user_image: "http://localhost/binzo/backend/uploads/users/user.png",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 12:41:37",
-          id: 6,
-          body: "my first post",
-          user_id: 35,
-          fullname: "basel aly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c45ce61ebc6b.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 12:40:22",
-          id: 5,
-          body: "my first post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image:
-            "http://localhost/binzo/backend/uploads/posts/5c4852a61a08f.jpg",
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 12:39:23",
-          id: 4,
-          body: "my first post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image:
-            "http://localhost/binzo/backend/uploads/posts/5c48526bb4bcd.jpg",
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 12:16:01",
-          id: 3,
-          body: "my first post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        },
-        {
-          created_at: "2019-01-23 12:05:06",
-          id: 2,
-          body: "my first post",
-          user_id: 36,
-          fullname: "baselbaselh alyaly",
-          image: null,
-          user_image:
-            "http://localhost/binzo/backend/uploads/users/5c56047a087b8.jpg",
-          likes_count: 0,
-          liked: false,
-          comments_count: 0
-        }
-      ]
+      snackbar: false,
+      snackbar_message: "",
+      snackbar_color: "",
+      posts_page: 1,
+      posts: []
     };
+  },
+  mounted() {
+    this.scroll();
+  },
+  created() {
+    this.getPosts();
+  },
+  methods: {
+    getPosts() {
+      let token = this.$cookies.get("Utoken");
+      this.$http
+        .get(
+          `http://localhost/binzo/backend/apis/user/getHome.php?page=${
+            this.posts_page
+          }`,
+          {
+            headers: {
+              Authorization: "Bearer " + token
+            }
+          }
+        )
+        .then(response => {
+          console.log(response);
+          let code = response.data.code;
+          if (code !== 200) {
+            this.showSnackbar("something went wrong!", "red");
+            return;
+          }
+          if (response.data.posts.length !== 0) {
+            let posts = this.posts;
+            let new_posts = response.data.posts;
+            this.posts = posts.concat(new_posts);
+            this.posts_page++;
+          }
+        })
+        .catch(error => {
+          this.showSnackbar("something went wrong!", "red");
+        });
+    },
+    scroll() {
+      window.onscroll = () => {
+        let bottomOfWindow =
+          Math.max(
+            window.pageYOffset,
+            document.documentElement.scrollTop,
+            document.body.scrollTop
+          ) +
+            window.innerHeight ===
+          document.documentElement.offsetHeight;
+
+        if (bottomOfWindow) {
+          this.getPosts();
+        }
+      };
+    },
+    showSnackbar(message, color) {
+      this.snackbar = true;
+      this.snackbar_message = message;
+      this.snackbar_color = color;
+    },
+    likeTrigger(post_id) {
+      Array.prototype.forEach.call(this.posts, e => {
+        if (e.id == post_id) {
+          e.liked = !e.liked;
+          e.liked == true ? e.likes_count++ : e.likes_count--;
+        }
+      });
+    },
+    commentAdded(post_id) {
+      Array.prototype.forEach.call(this.posts, e => {
+        if (e.id == post_id) {
+          e.comments_count++;
+        }
+      });
+    }
   }
 };
 </script>
