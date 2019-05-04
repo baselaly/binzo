@@ -28,8 +28,8 @@
             class="mr-1 like-icon"
           >{{liked ? 'favorite' : 'favorite_border'}}</v-icon>
           <span class="subheading mr-2 like-span">{{likes_count}}</span>
-          <v-icon @click="showCommentDialog" class="mr-1">mode_comment</v-icon>
-          <span class="subheading">{{comments_count}}</span>
+          <v-icon @click="showCommentDialog" class="mr-1 comment-icon">add_comment</v-icon>
+          <span class="subheading comment-icon">{{comments_count}}</span>
         </v-layout>
       </v-list-tile>
     </v-card-actions>
@@ -127,5 +127,8 @@ export default {
 }
 .like-span {
   color: #f34747 !important;
+}
+.comment-icon {
+  color: #ffa726 !important;
 }
 </style>
