@@ -44,7 +44,7 @@ try {
     }
     $post->owner_image = 'http://localhost/binzo/backend/uploads/users/' . $post_owner->image;
     $post->owner_name = $post_owner->first_name . ' ' . $post_owner->last_name;
-
+    $post->user_id==$logged_user->id?$post->owner=true:$post->owner=false;
     $post_image = new PostImage;
     $post_image = $post_image->getPostImage($post->id);
     if ($post_image) {
