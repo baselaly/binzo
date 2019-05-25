@@ -46,6 +46,8 @@ export default {
       this.$emit("close-add-post-dialog", {
         state: true
       });
+      this.$refs.post_form.reset();
+      this.image = "";
     },
     addPost() {
       if (!this.$refs.post_form.validate()) {
@@ -68,15 +70,18 @@ export default {
           if (code == 200) {
             this.$emit("close-add-post-dialog", {
               state: true,
-              message: null
+              message: false
             });
             this.$refs.post_form.reset();
+            this.image = "";
           } else {
             let message = response.data.message;
             this.$emit("close-add-post-dialog", {
               state: false,
               message: message
             });
+            this.$refs.post_form.reset();
+            this.image = "";
           }
         })
         .catch(error => {
