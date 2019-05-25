@@ -9,7 +9,7 @@
             <v-textarea outline :rules="rules" label="Whats on your mind?" v-model="body"></v-textarea>
             <img class="rendered_image" :src="image">
             <label for="file-upload" class="custom-file-upload">
-              <i class="fa fa-cloud-upload"></i> Change Your Image
+              <i class="fa fa-cloud-upload"></i> Attach an image
             </label>
             <input id="file-upload" @change="getUserImage($event)" type="file">
           </v-form>
@@ -123,5 +123,14 @@ export default {
 <style>
 .rendered_image {
   width: 700px;
+}
+input[type="file"] {
+  display: none;
+}
+.custom-file-upload {
+  border: 1px solid #ccc;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
 }
 </style>

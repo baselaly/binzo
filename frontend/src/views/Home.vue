@@ -123,7 +123,7 @@ export default {
       this.addPostDialog = true;
     },
     closePostDialog(data) {
-      if (data.state == true && data.message) {
+      if (data.state == true && !data.message) {
         this.posts_page = 1;
         this.posts = [];
         this.getPosts();
