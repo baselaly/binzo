@@ -1,28 +1,33 @@
 <template>
-  <v-flex xs12>
-    <v-flex v-for="(post, i) in posts" :key="i" ma-2>
-      <postCard
-        :id="post.id"
-        :body="post.body"
-        :user_id="post.user_id"
-        :owner_image="post.user_image"
-        :owner_name="post.fullname"
-        :post_image="post.image"
-        :liked="post.liked"
-        :likes_count="post.likes_count"
-        :comments_count="post.comments_count"
-        @like-trigger="likeTrigger"
-        @comment-added="commentAdded"
-      ></postCard>
+  <v-flex xs12 md8>
+    <v-flex>
+      <v-flex v-for="(post, i) in posts" :key="i" ma-2>
+        <postCard
+          :id="post.id"
+          :body="post.body"
+          :user_id="post.user_id"
+          :owner_image="post.user_image"
+          :owner_name="post.fullname"
+          :post_image="post.image"
+          :liked="post.liked"
+          :likes_count="post.likes_count"
+          :comments_count="post.comments_count"
+          @like-trigger="likeTrigger"
+          @comment-added="commentAdded"
+        ></postCard>
+      </v-flex>
+      <v-btn color="#ffa726" fab fixed top right @click="OpenAddPostDialog">
+        <v-icon>add</v-icon>
+      </v-btn>
+      <v-snackbar v-model="snackbar" :color="snackbar_color" bottom left>
+        {{snackbar_message}}
+        <v-btn color="white" flat @click="snackbar = false">Close</v-btn>
+      </v-snackbar>
+      <addPost :dialog="addPostDialog" @close-add-post-dialog="closePostDialog"></addPost>
     </v-flex>
-    <v-btn color="#ffa726" fab fixed top right @click="OpenAddPostDialog">
-      <v-icon>add</v-icon>
-    </v-btn>
-    <v-snackbar v-model="snackbar" :color="snackbar_color" bottom left>
-      {{snackbar_message}}
-      <v-btn color="white" flat @click="snackbar = false">Close</v-btn>
-    </v-snackbar>
-    <addPost :dialog="addPostDialog" @close-add-post-dialog="closePostDialog"></addPost>
+    <v-flex text-xs-center v-if="loading">
+      <v-progress-circular :size="50" color="amber" indeterminate></v-progress-circular>
+    </v-flex>
   </v-flex>
 </template>
 
@@ -42,7 +47,9 @@ export default {
       snackbar_color: "",
       posts_page: 1,
       posts: [],
-      addPostDialog: false
+      addPostDialog: false,
+      loading: false,
+      stop_loading: false
     };
   },
   mounted() {
@@ -53,6 +60,7 @@ export default {
   },
   methods: {
     getPosts() {
+      this.posts_page != 1 ? (this.loading = true) : "";
       let token = this.$cookies.get("Utoken");
       this.$http
         .get(
@@ -77,7 +85,10 @@ export default {
             let new_posts = response.data.posts;
             this.posts = posts.concat(new_posts);
             this.posts_page++;
+          } else {
+            this.stop_loading = true;
           }
+          this.loading = false;
         })
         .catch(error => {
           this.showSnackbar("something went wrong!", "red");
@@ -95,7 +106,7 @@ export default {
           document.documentElement.offsetHeight;
 
         if (bottomOfWindow) {
-          this.getPosts();
+          !this.stop_loading ? this.getPosts() : "";
         }
       };
     },
