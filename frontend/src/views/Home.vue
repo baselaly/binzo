@@ -15,13 +15,14 @@
         @comment-added="commentAdded"
       ></postCard>
     </v-flex>
-    <v-btn color="#ffa726" fab fixed top right>
+    <v-btn color="#ffa726" fab fixed top right @click="OpenAddPostDialog">
       <v-icon>add</v-icon>
     </v-btn>
     <v-snackbar v-model="snackbar" :color="snackbar_color" bottom left>
       {{snackbar_message}}
       <v-btn color="white" flat @click="snackbar = false">Close</v-btn>
     </v-snackbar>
+    <addPost :dialog="addPostDialog" @close-add-post-dialog="closePostDialog"></addPost>
   </v-flex>
 </template>
 
@@ -31,7 +32,8 @@
 export default {
   name: "home",
   components: {
-    postCard: () => import("@/components/core/postCard")
+    postCard: () => import("@/components/core/postCard"),
+    addPost: () => import("@/components/dialogs/addPost")
   },
   data() {
     return {
@@ -39,7 +41,8 @@ export default {
       snackbar_message: "",
       snackbar_color: "",
       posts_page: 1,
-      posts: []
+      posts: [],
+      addPostDialog: false
     };
   },
   mounted() {
@@ -115,6 +118,22 @@ export default {
           e.comments_count++;
         }
       });
+    },
+    OpenAddPostDialog() {
+      this.addPostDialog = true;
+    },
+    closePostDialog(data) {
+      if (data.state == true && data.message) {
+        this.posts_page = 1;
+        this.posts = [];
+        this.getPosts();
+        this.addPostDialog = false;
+        this.showSnackbar("Posted", "green");
+      } else if (data.state == false) {
+        this.showSnackbar(data.message, "red");
+      } else {
+        this.addPostDialog = false;
+      }
     }
   }
 };
