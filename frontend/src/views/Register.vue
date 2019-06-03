@@ -23,7 +23,14 @@
                 :rules="emailRules"
                 label="* E-mail"
               ></v-text-field>
-              <v-text-field v-model="password" :rules="passwordRules" label="* Password"></v-text-field>
+              <v-text-field
+                v-model="password"
+                :rules="passwordRules"
+                label="* Password"
+                :append-icon="show_password ? 'visibility_off' : 'visibility'"
+                :type="show_password ? 'text' : 'password'"
+                @click:append="show_password = !show_password"
+              ></v-text-field>
               <v-text-field
                 v-model="first_name"
                 :counter="counter"
@@ -44,7 +51,8 @@
               ></v-text-field>
               <v-text-field v-model="city" :counter="counter" :rules="locationRules" label="* City"></v-text-field>
               <v-btn color="orange lighten-1" @click="register">SignUp</v-btn>
-              <v-flex d-inline-block ml-2 class="subheading">have an account?
+              <v-flex d-inline-block ml-2 class="subheading">
+                have an account?
                 <router-link class="have-account-link body-1" to="/login">sign in</router-link>
               </v-flex>
             </v-form>
@@ -72,6 +80,7 @@ export default {
       snackbar_color: "",
       register_form: true,
       email: "",
+      show_password: false,
       emailRules: [
         v => !!v || "Email is required",
         v => (v && v.length <= 254) || "Email must be less than 255 characters",
@@ -107,7 +116,30 @@ export default {
         this.showSnackbar("please enter all required fields", "red");
         return;
       }
-      console.log("registered");
+      var user = {
+        first_name: this.first_name,
+        last_name: this.last_name,
+        email: this.email,
+        password: this.password,
+        country: this.country,
+        city: this.city
+      };
+      this.$http
+        .post("http://localhost/binzo/backend/apis/user/register.php", user)
+        .then(response => {
+          let code = response.data.code;
+          if (code !== 200) {
+            this.showSnackbar(response.data.message, "red");
+            return;
+          }
+          this.showSnackbar("your account registered successfully", "green");
+          setTimeout(() => {
+            this.$router.push({ name: "login" });
+          }, 1000);
+        })
+        .catch(error => {
+          this.showSnackbar("something went wrong!", "red");
+        });
     },
     showSnackbar(message, color) {
       this.snackbar = true;
