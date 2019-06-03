@@ -74,7 +74,6 @@ export default {
           }
         )
         .then(response => {
-          console.log(response);
           let code = response.data.code;
           if (code !== 200) {
             this.showSnackbar("something went wrong!", "red");
