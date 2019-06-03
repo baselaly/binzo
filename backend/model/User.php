@@ -181,7 +181,6 @@ class User
             $db = $this->db->openConnection();
             $sql = 'SELECT posts.created_at,posts.id,posts.body,posts.user_id,
             CONCAT(users.first_name," ",users.last_name) AS fullname, users.image FROM `users`
-            INNER JOIN `followers` ON users.id=followers.user_id
             INNER JOIN `posts` ON users.id=posts.user_id
             WHERE posts.user_id=:user_id
             OR posts.user_id=(SELECT `user_id` FROM `followers` WHERE `follower_id`=:userID)
