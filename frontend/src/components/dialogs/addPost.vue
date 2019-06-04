@@ -47,6 +47,7 @@ export default {
         state: true
       });
       this.$refs.post_form.reset();
+      this.postImage = "";
       this.image = "";
     },
     addPost() {

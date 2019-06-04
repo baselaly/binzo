@@ -32,6 +32,13 @@ export default new Router({
           beforeEnter: UserGuard,
           meta: { Auth: true },
         },
+        {
+          path: '/profile',
+          name: 'profile',
+          component: () => import('./views/Profile.vue'),
+          beforeEnter: UserGuard,
+          meta: { Auth: true },
+        },
       ],
     },
     {

@@ -24,7 +24,7 @@
             </v-list-tile-content>
           </v-list-tile>
         </router-link>
-        <router-link to="#" class="nav-text-link py-2 d-block">
+        <router-link to="/profile" class="nav-text-link py-2 d-block">
           <v-list-tile>
             <v-list-tile-action>
               <v-icon medium>person</v-icon>
