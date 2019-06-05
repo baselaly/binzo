@@ -99,7 +99,6 @@ export default {
         )
         .then(response => {
           this.post = response.data.post;
-          console.log(this.post);
         })
         .catch(error => {
           console.log(error);
@@ -161,7 +160,6 @@ export default {
             this.more_likes = false;
           }
           this.likes = likes.concat(new_likes);
-          console.log(this.likes);
         })
         .catch(error => {
           console.log(error);
@@ -173,6 +171,9 @@ export default {
     },
     closeLikesDialog() {
       this.likesDialog = false;
+      this.likes.length = 0;
+      this.likes_page = 1;
+      this.more_likes = true;
     },
     loadMoreLikes() {
       this.likes_page++;
