@@ -33,6 +33,35 @@
             </v-layout>
           </v-list-tile>
         </v-card-actions>
+        <v-flex two-line v-if="!comments_loading">
+          <v-flex px-4 py-2 v-for="(comment,i) in comments" :key="i">
+            <v-list-tile avatar ripple>
+              <v-list-tile-avatar>
+                <img :src="comment.user_image">
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title>{{comment.user_name}}</v-list-tile-title>
+                <v-list-tile-sub-title class="pl-3 ma-1">{{ comment.comment }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+                <v-list-tile-action-text>{{comment.created_at}}</v-list-tile-action-text>
+              </v-list-tile-action>
+            </v-list-tile>
+            <v-divider v-if="i + 1 < comments.length"></v-divider>
+          </v-flex>
+          <v-flex text-xs-center>
+            <v-btn
+              v-if="more_comments"
+              @click="getComments"
+              round
+              color="indigo"
+              class="white--text"
+            >More</v-btn>
+          </v-flex>
+        </v-flex>
+        <v-flex v-else text-xs-center py-5>
+          <v-progress-circular indeterminate :size="50" :width="5" color="white"></v-progress-circular>
+        </v-flex>
         <commentDialog
           :dialog="commentDialog"
           :post_id="post.id"
@@ -40,7 +69,7 @@
         ></commentDialog>
         <likesDialog
           :dialog="likesDialog"
-          :likes_loading="likes_loading"
+          :loading="likes_loading"
           :likes="likes"
           :load_more="more_likes"
           @close-likes-dialog="closeLikesDialog"
@@ -78,7 +107,12 @@ export default {
       likes_loading: true,
       likes: [],
       likes_page: 1,
-      more_likes: true
+      more_likes: false,
+      // comments variables
+      comments: [],
+      more_comments: false,
+      comments_page: 1,
+      comments_loading: true
     };
   },
   created() {
@@ -99,6 +133,7 @@ export default {
         )
         .then(response => {
           this.post = response.data.post;
+          this.getComments();
         })
         .catch(error => {
           console.log(error);
@@ -118,6 +153,10 @@ export default {
     },
     closeCommentDialog(value) {
       if (value.state == true) {
+        this.comments_loading = true;
+        this.comments.length = 0;
+        this.comments_page = 1;
+        this.getComments();
         this.post.comments_count++;
       }
       this.commentDialog = false;
@@ -156,10 +195,11 @@ export default {
         .then(response => {
           let likes = this.likes;
           let new_likes = response.data.likes.data;
-          if (new_likes.length == 0) {
-            this.more_likes = false;
-          }
+          let likes_count = response.data.likes.total;
           this.likes = likes.concat(new_likes);
+          this.likes.length < likes_count
+            ? (this.more_likes = true)
+            : (this.more_likes = false);
         })
         .catch(error => {
           console.log(error);
@@ -168,24 +208,61 @@ export default {
     openLikesDialog() {
       this.getLikes();
       this.likesDialog = true;
+      setTimeout(() => {
+        this.likes_loading = false;
+      }, 500);
     },
     closeLikesDialog() {
       this.likesDialog = false;
       this.likes.length = 0;
       this.likes_page = 1;
-      this.more_likes = true;
+      this.more_likes = false;
+      setTimeout(() => {
+        this.likes_loading = true;
+      }, 500);
     },
     loadMoreLikes() {
       this.likes_page++;
       this.getLikes();
+    },
+    getComments() {
+      if (!this.more_comments && this.comments_page !== 1) {
+        return;
+      }
+      let post_id = this.post.id;
+      let token = this.$cookies.get("Utoken");
+      this.$http
+        .get(
+          `http://localhost/binzo/backend/apis/comment/getPostComments.php?id=${post_id}&page=${
+            this.comments_page
+          }`,
+          {
+            headers: {
+              Authorization: "Bearer " + token
+            }
+          }
+        )
+        .then(response => {
+          let comments = this.comments;
+          let new_comments = response.data.comments.data;
+          let comments_count = response.data.comments.total;
+          this.comments = comments.concat(new_comments);
+          this.comments.length < comments_count
+            ? (this.more_comments = true)
+            : (this.more_comments = false);
+          this.comments_page++;
+          setTimeout(() => {
+            this.comments_loading = false;
+          }, 1000);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
 </script>
 <style>
-.post-link {
-  text-decoration: none;
-}
 .like-icon {
   color: #f34747 !important;
 }

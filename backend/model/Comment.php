@@ -72,7 +72,7 @@ class Comment
             $limit = 10; //per page
             $offset = 10 * ($page - 1);
             $db = $this->db->openConnection();
-            $sql = 'SELECT * FROM `comments` WHERE `post_id`=:post_id LIMIT :offset,:limit';
+            $sql = 'SELECT * FROM `comments` WHERE `post_id`=:post_id ORDER BY `created_at` DESC LIMIT :offset,:limit';
             $stmt = $db->prepare($sql);
             $stmt->execute([
                 'post_id' => $post_id,
