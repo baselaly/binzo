@@ -52,13 +52,14 @@ export default {
       stop_loading: false
     };
   },
-  mounted() {
-    this.scroll();
-  },
   created() {
     this.getPosts();
+    this.scrollListener();
   },
   methods: {
+    scrollListener() {
+      window.addEventListener("scroll", this.scroll);
+    },
     getPosts() {
       this.posts_page != 1 ? (this.loading = true) : "";
       let token = this.$cookies.get("Utoken");
