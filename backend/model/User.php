@@ -37,6 +37,7 @@ class User
                 'image' => $this->image,
                 'country' => $this->country,
                 'city' => $this->city,
+                'status'=>1,
                 'created_at' => date("Y-m-d H:i:s"),
             ]);
             $this->db->closeConnection();
