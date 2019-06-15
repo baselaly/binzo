@@ -9,7 +9,7 @@
         </v-flex>
         <v-flex display-1 text-truncate py-1 text-xs-center>{{user.first_name}} {{user.last_name}}</v-flex>
         <v-flex subheading text-truncate py-3 text-xs-center>
-          <v-flex py-2>Following {{followings}}</v-flex>
+          <v-flex py-2>Followings {{followings}}</v-flex>
           <v-flex py-2>Followers {{followers}}</v-flex>
         </v-flex>
       </v-flex>
