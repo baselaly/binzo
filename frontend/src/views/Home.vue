@@ -1,34 +1,56 @@
 <template>
-  <v-flex xs12 md8>
-    <v-flex>
-      <v-flex v-for="(post, i) in posts" :key="i" ma-2>
-        <postCard
-          :id="post.id"
-          :body="post.body"
-          :user_id="post.user_id"
-          :owner_image="post.user_image"
-          :owner_name="post.fullname"
-          :post_image="post.image"
-          :liked="post.liked"
-          :likes_count="post.likes_count"
-          :comments_count="post.comments_count"
-          @like-trigger="likeTrigger"
-          @comment-added="commentAdded"
-        ></postCard>
+  <v-layout>
+    <v-flex xs12 md8>
+      <v-flex>
+        <v-flex v-for="(post, i) in posts" :key="i" ma-2>
+          <postCard
+            :id="post.id"
+            :body="post.body"
+            :user_id="post.user_id"
+            :owner_image="post.user_image"
+            :owner_name="post.fullname"
+            :post_image="post.image"
+            :liked="post.liked"
+            :likes_count="post.likes_count"
+            :comments_count="post.comments_count"
+            @like-trigger="likeTrigger"
+            @comment-added="commentAdded"
+          ></postCard>
+        </v-flex>
+        <v-btn color="#ffa726" fab fixed top right @click="OpenAddPostDialog">
+          <v-icon>add</v-icon>
+        </v-btn>
+        <v-snackbar v-model="snackbar" :color="snackbar_color" bottom left>
+          {{snackbar_message}}
+          <v-btn color="white" flat @click="snackbar = false">Close</v-btn>
+        </v-snackbar>
+        <addPost :dialog="addPostDialog" @close-add-post-dialog="closePostDialog"></addPost>
       </v-flex>
-      <v-btn color="#ffa726" fab fixed top right @click="OpenAddPostDialog">
-        <v-icon>add</v-icon>
-      </v-btn>
-      <v-snackbar v-model="snackbar" :color="snackbar_color" bottom left>
-        {{snackbar_message}}
-        <v-btn color="white" flat @click="snackbar = false">Close</v-btn>
-      </v-snackbar>
-      <addPost :dialog="addPostDialog" @close-add-post-dialog="closePostDialog"></addPost>
+      <v-flex text-xs-center v-if="loading">
+        <v-progress-circular :size="50" color="amber" indeterminate></v-progress-circular>
+      </v-flex>
     </v-flex>
-    <v-flex text-xs-center v-if="loading">
-      <v-progress-circular :size="50" color="amber" indeterminate></v-progress-circular>
+    <v-flex md4 text-xs-center class="hidden-sm-and-down">
+      <v-list subheader>
+        <v-subheader class="headline">Who to Follow</v-subheader>
+        <v-list-tile v-for="(user,i) in similar_users" :key="i" avatar class="pa-2">
+          <v-list-tile-avatar>
+            <img :src="user.image">
+          </v-list-tile-avatar>
+
+          <v-list-tile-content>
+            <v-list-tile-title>{{user.first_name + user.last_name}}</v-list-tile-title>
+          </v-list-tile-content>
+
+          <v-list-tile-action>
+            <v-btn outline color="white">
+              follow
+            </v-btn>
+          </v-list-tile-action>
+        </v-list-tile>
+      </v-list>
     </v-flex>
-  </v-flex>
+  </v-layout>
 </template>
 
 <script>
@@ -49,11 +71,13 @@ export default {
       posts: [],
       addPostDialog: false,
       loading: false,
-      stop_loading: false
+      stop_loading: false,
+      similar_users: []
     };
   },
   created() {
     this.getPosts();
+    this.getSimilarUsers();
     this.scrollListener();
   },
   methods: {
@@ -89,6 +113,22 @@ export default {
             this.stop_loading = true;
           }
           this.loading = false;
+        })
+        .catch(error => {
+          this.showSnackbar("something went wrong!", "red");
+        });
+    },
+    getSimilarUsers() {
+      let token = this.$cookies.get("Utoken");
+      this.$http
+        .get("http://localhost/binzo/backend/apis/user/getSimilarUsers.php", {
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        })
+        .then(response => {
+          this.similar_users = response.data.users;
+          console.log(response);
         })
         .catch(error => {
           this.showSnackbar("something went wrong!", "red");

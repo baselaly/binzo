@@ -73,7 +73,7 @@ class User
     {
         try {
             $db = $this->db->openConnection();
-            $sql = 'SELECT * FROM `users` WHERE `email`=:email LIMIT 1';
+            $sql = 'SELECT * FROM `users` WHERE `email` LIKE :email LIMIT 1';
             $stmt = $db->prepare($sql);
             $stmt->execute([
                 'email' => $credentials['email'],
@@ -192,6 +192,25 @@ class User
                 'userID' => $user_id,
                 'limit' => $limit,
                 'offset' => $offset,
+            ]);
+            $this->db->closeConnection();
+            $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+            return $result;
+        } catch (PDOException $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    public function getSimilarUsers($user){
+        try {
+            $db = $this->db->openConnection();
+            $sql = 'SELECT * FROM `users` WHERE `id`!=:userId AND `id` NOT IN (SELECT `user_id` FROM `followers` WHERE `follower_id`=:user_id) AND (`country` LIKE :country OR `city` LIKE :city) ORDER BY `created_at` DESC LIMIT 5';
+            $stmt = $db->prepare($sql);
+            $stmt->execute([
+                'country' => $user->country,
+                'city' => $user->city,
+                'userId'=>$user->id,
+                'user_id'=>$user->id
             ]);
             $this->db->closeConnection();
             $result = $stmt->fetchAll(PDO::FETCH_OBJ);
