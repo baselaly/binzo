@@ -184,7 +184,7 @@ class User
             CONCAT(users.first_name," ",users.last_name) AS fullname, users.image FROM `users`
             INNER JOIN `posts` ON users.id=posts.user_id
             WHERE posts.user_id=:user_id
-            OR posts.user_id=(SELECT `user_id` FROM `followers` WHERE `follower_id`=:userID)
+            OR posts.user_id IN (SELECT `user_id` FROM `followers` WHERE `follower_id`=:userID)
             ORDER BY posts.created_at DESC LIMIT :offset,:limit';
             $stmt = $db->prepare($sql);
             $stmt->execute([

@@ -33,21 +33,24 @@
     <v-flex md4 text-xs-center class="hidden-sm-and-down">
       <v-list subheader>
         <v-subheader class="headline">Who to Follow</v-subheader>
-        <v-list-tile v-for="(user,i) in similar_users" :key="i" avatar class="pa-2">
-          <v-list-tile-avatar>
-            <img :src="user.image">
-          </v-list-tile-avatar>
+        <v-flex text-xs-center v-if="similar_users_loading">
+          <v-progress-circular :size="40" color="amber" indeterminate></v-progress-circular>
+        </v-flex>
+        <v-flex v-else>
+          <v-list-tile v-for="(user,i) in similar_users" :key="i" avatar class="pa-2">
+            <v-list-tile-avatar>
+              <img :src="user.image">
+            </v-list-tile-avatar>
 
-          <v-list-tile-content>
-            <v-list-tile-title>{{user.first_name + user.last_name}}</v-list-tile-title>
-          </v-list-tile-content>
+            <v-list-tile-content>
+              <v-list-tile-title>{{user.first_name + user.last_name}}</v-list-tile-title>
+            </v-list-tile-content>
 
-          <v-list-tile-action>
-            <v-btn outline color="white">
-              follow
-            </v-btn>
-          </v-list-tile-action>
-        </v-list-tile>
+            <v-list-tile-action>
+              <v-btn outline color="#ffa726" @click="follow(user.id)">follow</v-btn>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-flex>
       </v-list>
     </v-flex>
   </v-layout>
@@ -72,7 +75,8 @@ export default {
       addPostDialog: false,
       loading: false,
       stop_loading: false,
-      similar_users: []
+      similar_users: [],
+      similar_users_loading: true
     };
   },
   created() {
@@ -119,6 +123,7 @@ export default {
         });
     },
     getSimilarUsers() {
+      this.similar_users_loading = true;
       let token = this.$cookies.get("Utoken");
       this.$http
         .get("http://localhost/binzo/backend/apis/user/getSimilarUsers.php", {
@@ -128,7 +133,31 @@ export default {
         })
         .then(response => {
           this.similar_users = response.data.users;
-          console.log(response);
+          this.similar_users_loading = false;
+        })
+        .catch(error => {
+          this.showSnackbar("something went wrong!", "red");
+        });
+    },
+    follow(user_id) {
+      let token = this.$cookies.get("Utoken");
+      this.$http
+        .get(
+          `http://localhost/binzo/backend/apis/user/follow.php?id=${user_id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + token
+            }
+          }
+        )
+        .then(response => {
+          let code = response.data.code;
+          if (code != 200) {
+            let message = response.data.message;
+            this.showSnackbar(message, "red");
+          } else {
+            this.getSimilarUsers();
+          }
         })
         .catch(error => {
           this.showSnackbar("something went wrong!", "red");
