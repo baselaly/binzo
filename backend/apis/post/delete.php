@@ -3,6 +3,7 @@ require '../../vendor/autoload.php';
 
 header("Content-Type: application/json; charset=UTF-8");
 header('Access-Control-Allow-Origin: http://localhost:8080');
+header('Access-Control-Allow-Headers:Authorization');
 
 require_once '../../model/User.php';
 require_once '../../model/Post.php';
@@ -38,7 +39,7 @@ try {
     }
 
     $post->delete();
-    echo json_encode(['code' => 200, 'post' => 'your post has been deleted.']);
+    echo json_encode(['code' => 200, 'message' => 'your post has been deleted.']);
 } catch (Exception $e) {
     echo json_encode(['code' => 500, 'message' => $e->getMessage()]);
 }

@@ -39,6 +39,13 @@ export default new Router({
           beforeEnter: UserGuard,
           meta: { Auth: true },
         },
+        {
+          path: '/editprofile',
+          name: 'editprofile',
+          component: () => import('./views/EditProfile.vue'),
+          beforeEnter: UserGuard,
+          meta: { Auth: true },
+        },
       ],
     },
     {

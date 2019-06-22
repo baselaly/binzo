@@ -13,8 +13,10 @@
             :liked="post.liked"
             :likes_count="post.likes_count"
             :comments_count="post.comments_count"
+            :deletable="post.deletable"
             @like-trigger="likeTrigger"
             @comment-added="commentAdded"
+            @delete-post="postDeleted"
           ></postCard>
         </v-flex>
         <v-btn color="#ffa726" fab fixed top right @click="OpenAddPostDialog">
@@ -198,6 +200,22 @@ export default {
           e.comments_count++;
         }
       });
+    },
+    postDeleted(data) {
+      console.log(data);
+      let code = data.response.data.code;
+      let message = data.response.data.message;
+      if (code == 200) {
+        let deleted_post_id = data.post_id;
+        Array.prototype.forEach.call(this.posts, (e, index) => {
+          if (e.id == deleted_post_id) {
+            this.posts.splice(index, 1);
+          }
+        });
+        this.showSnackbar(message, "green");
+      } else {
+        this.showSnackbar(message, "red");
+      }
     },
     OpenAddPostDialog() {
       this.addPostDialog = true;

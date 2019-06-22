@@ -34,6 +34,16 @@
             </v-list-tile-content>
           </v-list-tile>
         </router-link>
+                <router-link to="/editprofile" class="nav-text-link py-2 d-block">
+          <v-list-tile>
+            <v-list-tile-action>
+              <v-icon medium>settings</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title display-1>setting</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </router-link>
       </v-list>
       <v-flex text-xs-center>
         <v-btn round color="red darken-1" class="white--text" @click="logout">

@@ -44,6 +44,9 @@ try {
         } else {
             $post->image = null;
         }
+
+        $post->deletable = $post->user_id == $logged_user->id ? true : false;
+
         $like = new Like;
         $post->likes_count = $like->getLikesCount($post->id);
         $like->post_id = $post->id;

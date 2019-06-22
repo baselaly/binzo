@@ -11,6 +11,8 @@
         <v-list-tile-content>
           <v-list-tile-title>{{owner_name}}</v-list-tile-title>
         </v-list-tile-content>
+        <v-spacer></v-spacer>
+        <v-icon v-if="deletable" @click="deletePost(id)" class="mr-1 delete-icon">delete</v-icon>
       </v-list-tile>
     </v-card-title>
     <router-link :to="{ name: 'post', params: {id: id } }" class="white--text post-link">
@@ -85,6 +87,10 @@ export default {
     comments_count: {
       required: true,
       type: Number
+    },
+    deletable: {
+      required: true,
+      type: Boolean
     }
   },
   methods: {
@@ -114,6 +120,29 @@ export default {
         this.$emit("comment-added", value.post_id);
       }
       this.commentDialog = false;
+    },
+    deletePost(post_id) {
+      console.log(post_id);
+      let token = this.$cookies.get("Utoken");
+      this.$http
+        .get(
+          `http://localhost/binzo/backend/apis/post/delete.php?id=${post_id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + token
+            }
+          }
+        )
+        .then(response => {
+          let data = {
+            response: response,
+            post_id: post_id
+          };
+          this.$emit("delete-post", data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
