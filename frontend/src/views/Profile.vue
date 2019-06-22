@@ -1,6 +1,9 @@
 <template>
   <v-layout>
     <v-flex xs12>
+      <v-flex v-if="posts.length==0" text-xs-center display-1 py-5>
+        you didn't Have any posts yet
+      </v-flex>
       <v-flex>
         <v-flex v-for="(post, i) in posts" :key="i" ma-2>
           <postCard

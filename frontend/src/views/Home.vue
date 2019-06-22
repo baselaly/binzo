@@ -1,6 +1,11 @@
 <template>
   <v-layout>
     <v-flex xs12 md8>
+      <v-flex v-if="posts.length==0" text-xs-center display-1 py-5>
+        <v-btn color="#ffa726" @click="OpenAddPostDialog">
+          Add Your First Post
+        </v-btn>
+      </v-flex>
       <v-flex>
         <v-flex v-for="(post, i) in posts" :key="i" ma-2>
           <postCard
