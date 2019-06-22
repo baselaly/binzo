@@ -202,7 +202,6 @@ export default {
       });
     },
     postDeleted(data) {
-      console.log(data);
       let code = data.response.data.code;
       let message = data.response.data.message;
       if (code == 200) {

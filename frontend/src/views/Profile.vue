@@ -126,7 +126,19 @@ export default {
       });
     },
     postDeleted(data) {
-      console.log(data);
+      let code = data.response.data.code;
+      let message = data.response.data.message;
+      if (code == 200) {
+        let deleted_post_id = data.post_id;
+        Array.prototype.forEach.call(this.posts, (e, index) => {
+          if (e.id == deleted_post_id) {
+            this.posts.splice(index, 1);
+          }
+        });
+        this.showSnackbar(message, "green");
+      } else {
+        this.showSnackbar(message, "red");
+      }
     }
   }
 };
