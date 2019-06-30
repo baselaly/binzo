@@ -2,9 +2,7 @@
   <v-layout>
     <v-flex xs12 md8>
       <v-flex v-if="posts.length==0" text-xs-center display-1 py-5>
-        <v-btn color="#ffa726" @click="OpenAddPostDialog">
-          Add Your First Post
-        </v-btn>
+        <v-btn color="#ffa726" @click="OpenAddPostDialog">Add Your First Post</v-btn>
       </v-flex>
       <v-flex>
         <v-flex v-for="(post, i) in posts" :key="i" ma-2>
@@ -44,9 +42,10 @@
           <v-progress-circular :size="40" color="amber" indeterminate></v-progress-circular>
         </v-flex>
         <v-flex v-else>
+          <v-flex v-if="similar_users.length==0" text-xs-center title py-5>No Recommendations</v-flex>
           <v-list-tile v-for="(user,i) in similar_users" :key="i" avatar class="pa-2">
             <v-list-tile-avatar>
-              <img :src="user.image">
+              <img :src="user.image" />
             </v-list-tile-avatar>
 
             <v-list-tile-content>
@@ -100,9 +99,7 @@ export default {
       let token = this.$cookies.get("Utoken");
       this.$http
         .get(
-          `http://localhost/binzo/backend/apis/user/getHome.php?page=${
-            this.posts_page
-          }`,
+          `http://localhost/binzo/backend/apis/user/getHome.php?page=${this.posts_page}`,
           {
             headers: {
               Authorization: "Bearer " + token
