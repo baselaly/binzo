@@ -34,7 +34,7 @@
             </v-list-tile-content>
           </v-list-tile>
         </router-link>
-                <router-link to="/editprofile" class="nav-text-link py-2 d-block">
+        <router-link to="/editprofile" class="nav-text-link py-2 d-block">
           <v-list-tile>
             <v-list-tile-action>
               <v-icon medium>settings</v-icon>
@@ -108,7 +108,7 @@ export default {
   text-decoration: none;
 }
 .nav-profile-img {
-  box-shadow: 0px 1px 2px 2px #0000005e;
+  box-shadow: 0px 2px 20px 2px #000000;
 }
 .nav-user-info {
   background-color: #212121;
