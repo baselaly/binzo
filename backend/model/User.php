@@ -220,4 +220,31 @@ class User
         }
     }
 
+    public function search($keyword){
+        try{
+            isset($_GET['page']) && filter_var($_GET['page'], FILTER_VALIDATE_INT) ? $page = $_GET['page'] : $page = 1;
+            $page = (int) $page;
+            $limit = 9; //per page
+            $offset = 9 * ($page - 1);
+
+            $db = $this->db->openConnection();
+            $sql = 'SELECT * FROM `users` WHERE `email` LIKE :email
+             OR `first_name` LIKE :first_name
+             OR `last_name` LIKE :last_name ORDER BY created_at DESC LIMIT :offset,:limit';
+            $stmt = $db->prepare($sql);
+            $stmt->execute([
+                'email' => '%'.$keyword.'%',
+                'first_name' => '%'.$keyword.'%',
+                'last_name' => '%'.$keyword.'%',
+                'offset' => $offset,
+                'limit' => $limit
+            ]);
+            $this->db->closeConnection();
+            $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+            return $result;
+        }catch(PDOException $e){
+            throw new \Exception($e->getMessage()); 
+        }
+    }
+
 }

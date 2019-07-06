@@ -4,7 +4,7 @@
       <v-flex class="nav-user-info">
         <v-flex xs12 text-xs-center py-3>
           <v-avatar size="80" class="nav-profile-img">
-            <img :src="user.image" alt="avatar">
+            <img :src="user.image" alt="avatar" />
           </v-avatar>
         </v-flex>
         <v-flex display-1 text-truncate py-1 text-xs-center>{{user.first_name}} {{user.last_name}}</v-flex>
@@ -55,10 +55,18 @@
     <v-toolbar app fixed clipped-left>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title>
-        <div class="display-1">
-          <span class="display-2 px-2 py-1 B-logo">B</span>INZO
+        <div class="title">
+          <span class="headline px-2 py-1 B-logo">B</span>INZO
         </div>
       </v-toolbar-title>
+      <v-flex xs4 offset-xs1 offset-sm1 offset-md3>
+        <v-text-field
+          v-model="search"
+          @keyup.enter.native="searchForUsers"
+          placeholder="Search for users and press enter..."
+          required
+        ></v-text-field>
+      </v-flex>
     </v-toolbar>
   </div>
 </template>
@@ -70,7 +78,8 @@ export default {
       drawer: true,
       user: "",
       followings: 0,
-      followers: 0
+      followers: 0,
+      search: ""
     };
   },
   created() {
@@ -95,6 +104,9 @@ export default {
           this.followers = response.data.statistics.followers;
         })
         .catch(error => {});
+    },
+    searchForUsers() {
+      this.$router.push({ name: "search", query: { q: this.search } });
     }
   }
 };
@@ -115,6 +127,6 @@ export default {
 }
 .B-logo {
   background-color: #ffa726;
-  border-radius: 10px;
+  border-radius: 50%;
 }
 </style>

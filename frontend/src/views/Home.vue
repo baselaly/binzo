@@ -22,7 +22,7 @@
             @delete-post="postDeleted"
           ></postCard>
         </v-flex>
-        <v-btn color="#ffa726" fab fixed top right @click="OpenAddPostDialog">
+        <v-btn color="#ffa726" small fab fixed top right @click="OpenAddPostDialog">
           <v-icon>add</v-icon>
         </v-btn>
         <v-snackbar v-model="snackbar" :color="snackbar_color" bottom left>

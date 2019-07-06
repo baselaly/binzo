@@ -46,6 +46,13 @@ export default new Router({
           beforeEnter: UserGuard,
           meta: { Auth: true },
         },
+        {
+          path: '/search',
+          name: 'search',
+          component: () => import('./views/Search.vue'),
+          beforeEnter: UserGuard,
+          meta: { Auth: true },
+        },
       ],
     },
     {
