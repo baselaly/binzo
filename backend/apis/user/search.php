@@ -35,6 +35,7 @@ try {
         $follow->follower_id = $logged_user->id;
         $follower = $follow->checkFollower();
         $user->follow= $follower ? false : true;
+        $user->hover= false;
     }
 
     echo json_encode(['code' => 200, 'users' => $users]);

@@ -9,20 +9,35 @@
     <v-flex xs12 md3 ma-2 d-inline-block text-xs-center v-for="(user,i) in users" :key="i">
       <v-card class="pa-3" height="270">
         <v-avatar size="80">
-          <v-img :src="user.image" aspect-ratio="2.75"></v-img>
+          <v-img class="user-image" :src="user.image" aspect-ratio="2.75"></v-img>
         </v-avatar>
         <v-card-title class="text-truncate justify-center" primary-title>
           <div>
             <h3 class="headline mb-0">{{user.full_name}}</h3>
-            <div class="pa-2 stats-div">Followers: {{user.statistics.followers}} Followings: {{user.statistics.followings}}</div>
+            <div
+              class="pa-2 stats-div"
+            >Followers: {{user.statistics.followers}} Followings: {{user.statistics.followings}}</div>
           </div>
         </v-card-title>
 
         <v-card-actions class="text-xs-center">
-          <v-btn v-if="user.follow" class="follow_btn" color="#ffa726">follow</v-btn>
-          <v-btn v-else class="following_btn" outline color="#ffa726" disabled>
-            following
-            <v-icon right dark>done</v-icon>
+          <v-btn
+            v-if="user.follow"
+            class="follow_btn"
+            color="#ffa726"
+            @click="follow(user.id)"
+          >follow</v-btn>
+          <v-btn
+            @mouseover="user.hover=true"
+            @mouseleave="user.hover=false"
+            v-else
+            class="following_btn"
+            :outline="!user.hover"
+            :color="!user.hover?'#ffa726':'red'"
+          >
+            {{user.hover?'unfollow':'following'}}
+            <v-icon v-if="!user.hover" right dark>done</v-icon>
+            <v-icon v-if="user.hover" right dark>clear</v-icon>
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -78,6 +93,34 @@ export default {
           console.log(error);
         });
     },
+    follow(user_id) {
+      let token = this.$cookies.get("Utoken");
+      this.$http
+        .get(
+          `http://localhost/binzo/backend/apis/user/follow.php?id=${user_id}`,
+          {
+            headers: {
+              Authorization: "Bearer " + token
+            }
+          }
+        )
+        .then(response => {
+          let code = response.data.code;
+          if (code != 200) {
+            let message = response.data.message;
+            this.showSnackbar(message, "red");
+          } else {
+            Array.prototype.forEach.call(this.users, e => {
+              if (e.id == user_id) {
+                e.follow = !e.follow;
+              }
+            });
+          }
+        })
+        .catch(error => {
+          this.showSnackbar("something went wrong!", "red");
+        });
+    },
     loadMoreUsers() {
       this.users_page += 1;
       this.users_loading = true;
@@ -104,16 +147,23 @@ export default {
 </script>
 <style>
 .follow_btn {
-  position: absolute!important;
+  position: absolute !important;
   bottom: 20px;
   left: 35%;
 }
 .following_btn {
-  position: absolute!important;
+  position: absolute !important;
   bottom: 20px;
   left: 20%;
+  width: 150px;
 }
-.stats-div{
-    color: #ffa726;
+.stats-div {
+  color: #ffa726;
+}
+.user-image {
+  border: 2px solid white;
+}
+.unfollow {
+  background-color: red;
 }
 </style>
