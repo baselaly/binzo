@@ -23,7 +23,7 @@ try {
         exit;
     }
 
-    $users = $user->search($_GET['q']);
+    $users = $user->search($_GET['q'],$logged_user->id);
 
     foreach ($users as $user){
         unset($user->password);

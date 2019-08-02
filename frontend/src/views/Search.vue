@@ -30,6 +30,7 @@
           <v-btn
             @mouseover="user.hover=true"
             @mouseleave="user.hover=false"
+            @click="follow(user.id)"
             v-else
             class="following_btn"
             :outline="!user.hover"
@@ -45,6 +46,10 @@
         <v-progress-circular :size="50" color="amber" indeterminate></v-progress-circular>
       </v-flex>
     </v-flex>
+    <v-snackbar v-model="snackbar" :color="snackbar_color" bottom left>
+      {{snackbar_message}}
+      <v-btn color="white" flat @click="snackbar = false">Close</v-btn>
+    </v-snackbar>
   </v-layout>
 </template>
 
@@ -53,6 +58,9 @@ export default {
   name: "search",
   data() {
     return {
+      snackbar: false,
+      snackbar_message: "",
+      snackbar_color: "",
       users: [],
       users_page: 1,
       users_loading: true,
@@ -141,6 +149,11 @@ export default {
           this.load_more ? this.loadMoreUsers() : "";
         }
       };
+    },
+    showSnackbar(message, color) {
+      this.snackbar = true;
+      this.snackbar_message = message;
+      this.snackbar_color = color;
     }
   }
 };
