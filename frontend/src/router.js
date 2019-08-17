@@ -53,6 +53,13 @@ export default new Router({
           beforeEnter: UserGuard,
           meta: { Auth: true },
         },
+        {
+          path: '/user/:id',
+          name: 'UserProfile',
+          component: () => import('./views/UserProfile.vue'),
+          beforeEnter: UserGuard,
+          meta: { Auth: true },
+        },
       ],
     },
     {

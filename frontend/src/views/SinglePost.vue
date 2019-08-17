@@ -120,7 +120,7 @@ export default {
   },
   methods: {
     getPost() {
-      var id = this.$route.params.id;
+      let id = this.$route.params.id;
       let token = this.$cookies.get("Utoken");
       this.$http
         .get(

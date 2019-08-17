@@ -13,7 +13,12 @@
         </v-avatar>
         <v-card-title class="text-truncate justify-center" primary-title>
           <div>
-            <h3 class="headline mb-0">{{user.full_name}}</h3>
+            <h3 class="headline mb-0">
+              <router-link
+                :to="{ name: 'UserProfile', params: {id: user.id } }"
+                class="white--text user-link"
+              >{{user.full_name}}</router-link>
+            </h3>
             <div
               class="pa-2 stats-div"
             >Followers: {{user.statistics.followers}} Followings: {{user.statistics.followings}}</div>
@@ -178,5 +183,8 @@ export default {
 }
 .unfollow {
   background-color: red;
+}
+.user-link{
+  text-decoration: none;
 }
 </style>
